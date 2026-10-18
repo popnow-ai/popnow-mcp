@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "popnow": {
+      "url": "https://api.popnow.ai/mcp"
+    }
+  }
+}

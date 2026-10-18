@@ -1,0 +1,19 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "popnow-api-key",
+      "description": "PopNow API key (sk-popnow-...)",
+      "password": true
+    }
+  ],
+  "servers": {
+    "popnow": {
+      "type": "http",
+      "url": "https://api.popnow.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:popnow-api-key}"
+      }
+    }
+  }
+}

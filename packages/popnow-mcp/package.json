@@ -1,0 +1,62 @@
+{
+  "name": "@popnow/mcp",
+  "version": "0.1.0",
+  "description": "Local stdio bridge to the PopNow remote MCP server: AI image, video, music and speech generation for any MCP client.",
+  "mcpName": "io.github.popnow-ai/popnow-mcp",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "popnow-mcp": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test \"test/*.test.mjs\"",
+    "prepublishOnly": "npm test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "popnow",
+    "ai-video-generator",
+    "ai-image-generator",
+    "text-to-video",
+    "image-to-video",
+    "ai-music-generator",
+    "claude",
+    "cursor"
+  ],
+  "homepage": "https://popnow.ai/mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/popnow-ai/popnow-mcp.git",
+    "directory": "packages/popnow-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/popnow-ai/popnow-mcp/issues"
+  }
+}

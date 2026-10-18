@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/popnow-mcp
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm test
+      - name: Check example configs are valid JSON
+        working-directory: .
+        run: for f in examples/*.json server.json; do node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$f"; done

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "popnow": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://api.popnow.ai/mcp", "--header", "Authorization:${POPNOW_AUTH}"],
+      "env": {
+        "POPNOW_AUTH": "Bearer sk-popnow-..."
+      }
+    }
+  }
+}

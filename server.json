@@ -1,0 +1,35 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.popnow-ai/popnow-mcp",
+  "title": "PopNow",
+  "description": "AI image, video, music and speech generation: text-to-video, image-to-video, effects and upscaling.",
+  "websiteUrl": "https://popnow.ai/mcp",
+  "icons": [
+    {
+      "src": "https://popnow.ai/brand/popnow-logo.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "256x256"
+      ]
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/popnow-ai/popnow-mcp",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.popnow.ai/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional. 'Bearer sk-popnow-...' API key from https://popnow.ai/api/console/keys. Omit it to sign in with OAuth.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

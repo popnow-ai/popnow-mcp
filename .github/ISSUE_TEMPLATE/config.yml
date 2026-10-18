@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: PopNow MCP documentation
+    url: https://popnow.ai/docs/mcp
+    about: Setup steps, tools, prices and troubleshooting.
+  - name: Report a security issue
+    url: https://github.com/popnow-ai/popnow-mcp/security/advisories/new
+    about: Please report vulnerabilities privately.

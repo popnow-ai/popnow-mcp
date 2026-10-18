@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "popnow": {
+      "type": "streamableHttp",
+      "url": "https://api.popnow.ai/mcp",
+      "headers": {
+        "Authorization": "Bearer sk-popnow-..."
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

@@ -1,0 +1,31 @@
+# PopNow MCP Server
+
+> The PopNow MCP Server is a hosted Model Context Protocol server at https://api.popnow.ai/mcp (Streamable HTTP, stateless) that lets ChatGPT, Claude, Cursor, VS Code, Windsurf, Cline, Codex CLI and any MCP client create AI images, videos, songs and voiceovers on PopNow (https://popnow.ai) with the user's PopNow credits.
+
+This repository holds the public setup guide, copy-paste client configs, an MCP registry manifest (server.json) and @popnow/mcp, an optional stdio bridge (not on npm; build from source) for clients that only run local servers.
+
+- Auth: OAuth 2.1 (PKCE, dynamic client registration, scopes `generate` and `read`) or `Authorization: Bearer sk-popnow-...` (keys at https://popnow.ai/api/console/keys).
+- Tools (12): create_image, edit_image, create_video, create_music, create_speech, apply_effect, remove_background, upscale, get_job, list_my_creations, check_balance, list_models.
+- Prices: same credits as popnow.ai. Every generation tool quotes first; up to 30 credits starts at once, above 30 the tool returns "Needs confirmation" and is called again with `max_credits`. Failed jobs are refunded automatically.
+- Typical costs: image about 8 credits, 5-second video about 28, song about 11, background removal 1, photo upscale about 2.
+- Inputs: `image_url` takes a public https link or a `popnow://` link from an earlier result; in ChatGPT attached photos arrive as `image`.
+- Long jobs return a `job_id`; call `get_job` (wait_seconds 0 to 50) to collect the result.
+
+## Docs
+
+- [README](https://github.com/popnow-ai/popnow-mcp#readme): setup per client, tools table, auth, credits, FAQ
+- [MCP guide](https://popnow.ai/docs/mcp): official documentation
+- [Use PopNow in ChatGPT and Claude](https://popnow.ai/mcp): non-developer walkthrough
+- [REST API reference](https://popnow.ai/docs/openapi): the same models over HTTP
+- [llms.txt for popnow.ai](https://popnow.ai/llms.txt)
+
+## Files
+
+- [examples/](https://github.com/popnow-ai/popnow-mcp/tree/main/examples): configs for Claude Desktop, Cursor, VS Code, Windsurf, Cline, Codex CLI and generic clients
+- [server.json](https://github.com/popnow-ai/popnow-mcp/blob/main/server.json): MCP registry manifest (remote streamable-http endpoint)
+- [packages/popnow-mcp](https://github.com/popnow-ai/popnow-mcp/tree/main/packages/popnow-mcp): @popnow/mcp stdio bridge, build from source (env POPNOW_API_KEY, optional POPNOW_MCP_URL)
+
+## Optional
+
+- [Pricing](https://popnow.ai/pricing): credit packs, no subscription
+- [PopNow skills](https://github.com/popnow-ai/popnow-skills), [Python SDK](https://github.com/popnow-ai/popnow-python), [JavaScript SDK](https://github.com/popnow-ai/popnow-js), [API examples](https://github.com/popnow-ai/popnow-api), [Blender add-on](https://github.com/popnow-ai/popnow-blender)
