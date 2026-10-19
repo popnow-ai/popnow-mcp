@@ -370,14 +370,26 @@ Assistant:  (calls create_music → about 11 credits, under 30, starts at once)
 
 [`packages/popnow-mcp`](packages/popnow-mcp) is a minimal TypeScript package (bin `popnow-mcp`) for MCP clients that can only launch local stdio servers. It connects a `StdioServerTransport` to a `StreamableHTTPClientTransport` from the official MCP SDK and forwards every message unchanged, so tools and prices always match the live server.
 
-> The package is **not on npm yet**. Build it from source as shown below, or use `mcp-remote` for a ready-made bridge.
+It is published on npm as [`@popnow/mcp`](https://www.npmjs.com/package/@popnow/mcp), so `npx` runs it with no install step:
+
+```json
+{
+  "mcpServers": {
+    "popnow": {
+      "command": "npx",
+      "args": ["-y", "@popnow/mcp"],
+      "env": { "POPNOW_API_KEY": "sk-popnow-..." }
+    }
+  }
+}
+```
 
 | Environment variable | Required | Description |
 | --- | --- | --- |
 | `POPNOW_API_KEY` | yes | PopNow API key (`sk-popnow-...`), sent as a Bearer token |
 | `POPNOW_MCP_URL` | no | Remote endpoint, default `https://api.popnow.ai/mcp` |
 
-Build and run it from source (Node.js 18 or newer):
+To build and run it from source instead (Node.js 18 or newer):
 
 ```bash
 git clone https://github.com/popnow-ai/popnow-mcp.git
@@ -434,7 +446,7 @@ Yes. PopNow's `create_music` makes original songs or instrumentals (Suno v6) and
 No. Connecting is free, and each creation costs the same credits as on popnow.ai. Failed creations are refunded automatically, and anything over 30 credits waits for your confirmation.
 
 ### Do I need to install anything?
-No. PopNow is a hosted remote MCP server; you only add its URL. Clients that cannot connect to remote servers can use `mcp-remote`, or build the optional `@popnow/mcp` bridge in this repo from source.
+No. PopNow is a hosted remote MCP server; you only add its URL. Clients that cannot connect to remote servers can use `mcp-remote`, or run the optional `@popnow/mcp` bridge with `npx -y @popnow/mcp`.
 
 ### Can I use an API key instead of OAuth?
 Yes. Send `Authorization: Bearer sk-popnow-...` with a key from the [API console](https://popnow.ai/api/console/keys). Spend caps and allow-lists on the key apply.

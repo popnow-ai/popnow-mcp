@@ -7,24 +7,19 @@ AI image, video, music and speech tools.
 The bridge has no tools of its own: it forwards every MCP message to the remote server with your API key,
 so the tool list, prices and confirmations always match the live service.
 
-> Not published to npm yet. Build it from source (below), or use the generic `mcp-remote` bridge.
-
 If your client supports remote (Streamable HTTP) servers, you do not need this package. Add
 `https://api.popnow.ai/mcp` directly and sign in with OAuth. See the [main README](https://github.com/popnow-ai/popnow-mcp#readme).
 
 ## Usage
 
-```bash
-npm install
-npm run build   # writes dist/cli.js
-```
+Add it to your MCP client config; `npx` downloads and runs it (Node.js 18 or newer):
 
 ```json
 {
   "mcpServers": {
     "popnow": {
-      "command": "node",
-      "args": ["/absolute/path/to/popnow-mcp/packages/popnow-mcp/dist/cli.js"],
+      "command": "npx",
+      "args": ["-y", "@popnow/mcp"],
       "env": { "POPNOW_API_KEY": "sk-popnow-..." }
     }
   }
@@ -36,7 +31,7 @@ npm run build   # writes dist/cli.js
 | `POPNOW_API_KEY` | yes | A PopNow API key from [popnow.ai/api/console/keys](https://popnow.ai/api/console/keys) |
 | `POPNOW_MCP_URL` | no | Override the endpoint (default `https://api.popnow.ai/mcp`) |
 
-`node dist/cli.js --help` prints the same information. Diagnostics go to stderr; stdout carries only MCP messages.
+`npx @popnow/mcp --help` prints the same information. Diagnostics go to stderr; stdout carries only MCP messages.
 
 ## Programmatic use
 

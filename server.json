@@ -31,5 +31,31 @@
         }
       ]
     }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@popnow/mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "POPNOW_API_KEY",
+          "description": "PopNow API key (sk-popnow-...) from https://popnow.ai/api/console/keys",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "POPNOW_MCP_URL",
+          "description": "Override the remote endpoint (default https://api.popnow.ai/mcp)",
+          "isRequired": false,
+          "format": "string"
+        }
+      ]
+    }
   ]
 }

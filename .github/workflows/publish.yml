@@ -1,0 +1,61 @@
+name: Publish
+
+# Runs when a version tag (v1.2.3) is pushed. Publishes @popnow/mcp to npm and server.json to the
+# MCP Registry, both through GitHub OIDC, so no npm or registry token is stored in this repository.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Trusted publishing needs npm 11.5.1 or later, which ships with Node 24.
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Tag matches the package and server.json versions
+        run: |
+          pkg=$(node -p "require('./packages/popnow-mcp/package.json').version")
+          srv=$(node -p "require('./server.json').version")
+          npmref=$(node -p "require('./server.json').packages[0].version")
+          for v in "$pkg" "$srv" "$npmref"; do
+            test "v$v" = "$GITHUB_REF_NAME" || { echo "Tag $GITHUB_REF_NAME does not match version $v"; exit 1; }
+          done
+
+      - name: Test
+        working-directory: packages/popnow-mcp
+        run: |
+          npm ci
+          npm test
+
+      - name: Publish @popnow/mcp to npm
+        working-directory: packages/popnow-mcp
+        run: |
+          version=$(node -p "require('./package.json').version")
+          if npm view "@popnow/mcp@$version" version >/dev/null 2>&1; then
+            echo "@popnow/mcp@$version is already on npm, skipping"
+          else
+            npm publish --access public
+          fi
+
+      - name: Install mcp-publisher
+        run: |
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_${OS}_${ARCH}.tar.gz" | tar xz mcp-publisher
+
+      - name: Publish server.json to the MCP Registry
+        run: |
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish
