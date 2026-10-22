@@ -3,6 +3,17 @@
 All notable changes to this repository are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Documentation for the free style-preset tools `find_skills` (find ready-made Agent Skills for what the user wants to make, with preview links) and `use_skill` (the chosen preset's playbook, a short-lived download link with install commands, and which PopNow tools run its generation steps), including the find, pick and use flow with an example conversation.
+
+### Changed
+
+- Prices follow PopNow's new credit unit: 1 credit = $0.001 (it was $0.01), so every credit amount changed. Typical costs and examples are updated (an image about 48 credits, a 5-second video about 185, a song about 72), and the auto-start limit is now 300 credits (it was 30).
+- The tool summary no longer gives a fixed tool count.
+
 ## [0.1.0] - 2026-10-19
 
 ### Added

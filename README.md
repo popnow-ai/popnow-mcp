@@ -19,7 +19,7 @@
 
 **The PopNow MCP Server is a hosted Model Context Protocol server at `https://api.popnow.ai/mcp` that lets ChatGPT, Claude, Cursor, VS Code and any other MCP client create AI images, videos, songs and voiceovers on [PopNow](https://popnow.ai), using your PopNow credits.**
 
-Ask in plain words ("turn this photo into a 5-second video", "make an upbeat synth-pop track") and the assistant picks the right PopNow tool, tells you the price, and returns the result in the chat. There is nothing to host: the server is remote, signs you in with OAuth 2.1, and uses the same models, prices and library as [popnow.ai](https://popnow.ai). Make it pop.
+Ask in plain words ("turn this photo into a 5-second video", "make an upbeat synth-pop track") and the assistant picks the right PopNow tool, tells you the price, and returns the result in the chat. There is nothing to host: the server is remote, signs you in with OAuth 2.1, and uses the same models, prices and library as [popnow.ai](https://popnow.ai). It is also the home of PopNow's free [Agent Skills](#style-presets-find_skills-and-use_skill): ask for a style for your launch video, deck or landing page and the assistant shows you presets to pick from. Make it pop.
 
 This repository contains the public setup guide, copy-paste client configs in [`examples/`](examples), an [MCP registry manifest](server.json), and [`@popnow/mcp`](packages/popnow-mcp), a tiny optional stdio bridge for clients that only run local servers.
 
@@ -27,6 +27,7 @@ This repository contains the public setup guide, copy-paste client configs in [`
 
 - [Quickstart](#quickstart)
 - [Tools](#tools)
+- [Style presets: find_skills and use_skill](#style-presets-find_skills-and-use_skill)
 - [Connect your client](#connect-your-client): [Claude](#claude-web-desktop-and-mobile) · [Claude Desktop (local)](#claude-desktop-local-config) · [Claude Code](#claude-code) · [ChatGPT](#chatgpt) · [Cursor](#cursor) · [VS Code](#vs-code) · [Windsurf](#windsurf) · [Cline](#cline) · [Codex CLI](#codex-cli) · [Other clients](#other-clients-and-your-own-code)
 - [Authentication](#authentication)
 - [Credits, prices and confirmation](#credits-prices-and-confirmation)
@@ -52,31 +53,61 @@ No PopNow account yet? Sign up at [popnow.ai](https://popnow.ai) and pick a [cre
 | Transport | Streamable HTTP, stateless (`POST` only; `GET` and `DELETE` return `405`) |
 | Sign-in | OAuth 2.1 with PKCE and dynamic client registration, or `Authorization: Bearer sk-popnow-...` |
 | Scopes | `generate` (create with your credits) and `read` (balance, creations, model list) |
-| Tools | 12 (listed below) |
-| Price | Same credits as popnow.ai. Up to 30 credits starts at once; anything above waits for your yes |
+| Tools | Generation, account and style-preset tools (listed below) |
+| Price | Same credits as popnow.ai (1 credit = $0.001). Up to 300 credits starts at once; anything above waits for your yes. Style presets are free |
 
 ## Tools
 
 | Tool | What it does | Key parameters | Typical cost |
 | --- | --- | --- | --- |
-| `create_image` | Make a new picture from a description | `prompt`, `aspect_ratio` (default `1:1`), `model`, `max_credits` | about 8 credits (default Nano Banana 2.1) |
-| `edit_image` | Change a photo with words: new style, outfit, background, add or remove things | `prompt`, `image_url` / `image`, `more_image_urls`, `aspect_ratio`, `model`, `max_credits` | about 8 credits |
-| `create_video` | Make a short video from a description, or bring a photo to life (text-to-video and image-to-video) | `prompt`, `image_url` / `image`, `duration_seconds` (default 5), `aspect_ratio` (default `16:9`), `model`, `max_credits` | about 28 credits for 5 s (default MiniMax H3); 1 to 3 minutes |
-| `create_music` | Make an original song or instrumental track | `prompt`, `lyrics`, `instrumental`, `voice` (`female` / `male`), `title`, `max_credits` | about 11 credits per song (Suno v6) |
-| `create_speech` | Turn text into natural speech in many voices and languages | `text`, `voice` (Kore, Puck, Charon, Aoede, Fenrir, Leda ...), `style` (`whisper`, `empathetic`, `vocal_smile`, `newscaster`, `promo_hype`, `deadpan`), `max_credits` | a few credits, priced by length |
-| `apply_effect` | Turn a photo into a trending effect video (Zombie Turn, Flying Car, Tiny Planet, Molten Gold, Hyperdrive ...) or a photo makeover (Clay Figure, Pixel Art ...) | `effect` (name or id), `image_url` / `image`, `max_credits` | priced per effect; get the exact quote first |
-| `remove_background` | Cut out the subject and make the background transparent | `image_url` / `image`, `max_credits` | 1 credit |
-| `upscale` | Make a photo or video sharper and bigger | `image_url` / `image` or `video_url`, `size` (photos `2k`, `4k`, `8k`; videos `720p`, `1080p`, `2k`, `4k`), `max_credits` | about 2 credits for a photo; videos by length |
+| `create_image` | Make a new picture from a description | `prompt`, `aspect_ratio` (default `1:1`), `model`, `max_credits` | about 48 credits (default Nano Banana 2.1) |
+| `edit_image` | Change a photo with words: new style, outfit, background, add or remove things | `prompt`, `image_url` / `image`, `more_image_urls`, `aspect_ratio`, `model`, `max_credits` | about 48 credits |
+| `create_video` | Make a short video from a description, or bring a photo to life (text-to-video and image-to-video) | `prompt`, `image_url` / `image`, `duration_seconds` (default 5), `aspect_ratio` (default `16:9`), `model`, `max_credits` | about 185 credits for 5 s (default MiniMax H3); 1 to 3 minutes |
+| `create_music` | Make an original song or instrumental track | `prompt`, `lyrics`, `instrumental`, `voice` (`female` / `male`), `title`, `max_credits` | about 72 credits per song (Suno v6) |
+| `create_speech` | Turn text into natural speech in many voices and languages | `text`, `voice` (Kore, Puck, Charon, Aoede, Fenrir, Leda ...), `style` (`whisper`, `empathetic`, `vocal_smile`, `newscaster`, `promo_hype`, `deadpan`), `max_credits` | priced by length, about 20 credits per minute of audio |
+| `apply_effect` | Turn a photo into a trending effect video (Zombie Turn, Flying Car, Tiny Planet, Molten Gold, Hyperdrive ...) or a photo makeover (Clay Figure, Pixel Art ...) | `effect` (name or id), `image_url` / `image`, `max_credits` | about 125 to 340 credits per video, 30 to 50 per photo makeover; quoted first |
+| `remove_background` | Cut out the subject and make the background transparent | `image_url` / `image`, `max_credits` | about 5 credits |
+| `upscale` | Make a photo or video sharper and bigger | `image_url` / `image` or `video_url`, `size` (photos `2k`, `4k`, `8k`; videos `720p`, `1080p`, `2k`, `4k`), `max_credits` | about 12 credits for a photo; videos by length |
 | `get_job` | Check on a creation that is still running and return it when ready | `job_id`, `wait_seconds` (0 to 50, default 30) | free |
 | `list_my_creations` | Show your recent PopNow creations with links | `kind` (`image`, `video`, `audio`), `limit` (1 to 20, default 10) | free |
 | `check_balance` | Show how many credits you have left (and how many are held for running jobs) | none | free |
 | `list_models` | List the image, video and audio models, or every effect, with prices | `category` (`image`, `video`, `audio`, `effects`) | free |
+| `find_skills` | Find ready-made style presets (Agent Skills) for what you want to make: product launch videos, slide decks, landing pages and websites, editorial images. Each option has a name, a one-line look, a preview video or picture, the PopNow generation it uses and what it needs locally | `intent` (your words), `type` (`video`, `image`, `slides`, `web`), `limit` (1 to 6, default 4) | free |
+| `use_skill` | Get the preset you picked: its full playbook (`SKILL.md`), a short-lived signed download link for the whole package with install commands for your coding agent, and which PopNow tools run its generation steps | `slug` (from `find_skills`), `agent` (`claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `opencode`, or `chat` without a file system) | free; each generation it runs is quoted first |
 
 - **Models.** Every generation tool that takes `model` accepts a PopNow model id from `list_models`, so "use Seedance" or "make it with Wan" just works. Models include Kling, Seedance, Wan, Vidu, MiniMax, Nano Banana, GPT Image, Flux, Suno and more; the live list is always `list_models` (or `GET /api/v1/models` on the [REST API](https://popnow.ai/docs/openapi)).
 - **Photos in.** `image_url` takes a public `https` link or a `popnow://` link from an earlier result. In ChatGPT, an attached photo arrives as the `image` file object.
 - **Results out.** Images come back inline as a preview plus a download link; videos and audio come back as links. Each result also has a permanent `popnow://` link you can pass to another tool ("now animate that picture"). Everything is saved in your [PopNow library](https://popnow.ai/assets).
-- **Annotations.** All tools carry the standard MCP hints. `get_job`, `list_my_creations`, `check_balance` and `list_models` are read-only, and no tool deletes anything.
+- **Annotations.** All tools carry the standard MCP hints. `get_job`, `list_my_creations`, `check_balance`, `list_models`, `find_skills` and `use_skill` are read-only, and no tool deletes anything.
 - **Effects** cover the same set as the [Effects page](https://popnow.ai/effects). Two-person effects need two placed photos and are website-only.
+
+## Style presets: find_skills and use_skill
+
+PopNow keeps a catalog of free [Agent Skills](https://popnow.ai/skills/agent-skills): named styles for product launch videos, slide decks, landing pages and websites, editorial images and more, each with a preview and a full playbook that an AI agent follows to build the result. Two free tools bring the catalog into any MCP client:
+
+1. **Find.** The assistant calls `find_skills` with what you want to make, in your words (optionally `type`: `video`, `image`, `slides` or `web`). It gets up to 6 options (4 by default), best first, each with a name, a one-line description of the look, a preview link, the PopNow generation it uses and its local requirements.
+2. **Pick.** The assistant shows you the options with their previews and asks which one you want.
+3. **Use.** The assistant calls `use_skill` with the chosen `slug` and `agent` (`claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `opencode`, or `chat` in apps without a file system). The reply holds the full `SKILL.md` playbook, a short-lived signed download link to the complete package with the install commands for that agent, and which PopNow tools (`create_image`, `create_video`, `create_music`, `create_speech` ...) replace the playbook's own generation scripts.
+
+Finding, downloading and using a preset is free. Only the images, video, music or voice it generates cost credits, quoted and confirmed like every other PopNow tool. Presets are licensed for your own and client work; please don't republish the packages. In a chat app without a file system the assistant can still follow the playbook's look and make the pictures with `create_image`; steps that run local scripts need a coding agent.
+
+```text
+You:        I need a launch video for our note-taking app.
+Assistant:  (calls find_skills with intent "launch video for a note-taking app", type "video")
+            Here are three styles:
+            1. <Preset A> - <its one-line look>. Preview: <link>. Uses PopNow video; needs Node.js.
+            2. <Preset B> - ...
+            3. <Preset C> - ...
+            Which one do you like? The preset is free; only the clips it makes cost credits.
+You:        The first one.
+Assistant:  (calls use_skill with that slug and agent "claude-code", installs the package from the
+            signed link, then follows the playbook)
+            Installed. The first clip will cost 185 credits. Go ahead?
+You:        Yes.
+Assistant:  (calls create_video with max_credits: 185, then get_job, and keeps building the video)
+```
+
+Outside MCP, the same catalog is available through the open API (`GET /api/v1/agent-skills`, `GET /api/v1/agent-skills/{slug}`, and `GET /api/v1/agent-skills/{slug}/download`, which redirects to a signed link; an API key is required), the `popnow-skill-finder` skill in [popnow-skills](https://github.com/popnow-ai/popnow-skills), and the [website](https://popnow.ai/skills/agent-skills).
 
 ## Connect your client
 
@@ -322,12 +353,12 @@ For production code that calls models directly, the [PopNow REST API](https://po
 
 ## Credits, prices and confirmation
 
-Connecting is free. Every creation spends the same credits as on popnow.ai, at the same prices, from the same balance. PopNow sells credit packs with no subscription; see [pricing](https://popnow.ai/pricing).
+Connecting is free, and so are `find_skills` and `use_skill`. Every creation spends the same credits as on popnow.ai, at the same prices, from the same balance: 1 credit = $0.001. PopNow sells credit packs with no subscription, from Starter ($9, 9,000 credits) to Pro ($99, 120,000 credits including bonus), or any amount from $10 to $2,000 at 1,000 credits per $1; see [pricing](https://popnow.ai/pricing).
 
 Every generation tool quotes first:
 
-- **Up to 30 credits** (an image, a song, a 5-second video on the default model): the job starts right away and the reply states what it cost.
-- **Over 30 credits** (longer or higher-resolution video, some effects): nothing starts. The tool answers *Needs confirmation* with the price and your balance, the assistant asks you, and when you agree it calls the tool again with `max_credits` set to the price you accepted.
+- **Up to 300 credits** (an image, a song, a 5-second video on the default model): the job starts right away and the reply states what it cost.
+- **Over 300 credits** (longer or higher-resolution video, some effects): nothing starts. The tool answers *Needs confirmation* with the price and your balance, the assistant asks you, and when you agree it calls the tool again with `max_credits` set to the price you accepted.
 - **Price moved** between quote and start: nothing is charged and the reply gives the new price to confirm.
 - **A creation fails:** its credits are refunded automatically.
 
@@ -345,25 +376,26 @@ A creation over the limit is not charged; the tool says how many seconds to wait
 - "Make a 4:5 picture of a paper boat on a rainy window sill, soft morning light."
 - "Edit this photo: put her in a red jacket and make the background a snowy street."
 - "Turn this product photo into a 5-second video with a slow camera push-in."
-- "Make a 9:16 video of a vintage car cruising along the coast at golden hour, 10 seconds." *(over 30 credits, so the assistant asks first)*
+- "Make a 9:16 video of a vintage car cruising along the coast at golden hour, 10 seconds." *(over 300 credits, so the assistant asks first)*
 - "Apply the Zombie Turn effect to my selfie."
 - "Write and produce an upbeat synth-pop song about a summer road trip, female vocals."
 - "Read this paragraph aloud in the Puck voice, newscaster style."
 - "Remove the background from this logo, then upscale it to 4K."
 - "What video models can you use, and how much does each cost?"
 - "How many PopNow credits do I have left? Show my last five videos."
+- "Find me a style for a pitch deck for our seed round." *(find_skills, then use_skill; free)*
 
 A typical exchange:
 
 ```text
 You:        Make a 9:16 video of a vintage car cruising along the coast at golden hour, 10 seconds.
-Assistant:  (calls create_video → "Needs confirmation … costs 56 credits (the user has 412)")
-            That's 56 credits from your PopNow balance. Want me to go ahead?
+Assistant:  (calls create_video → "Needs confirmation … costs 370 credits (the user has 8450)")
+            That's 370 credits from your PopNow balance. Want me to go ahead?
 You:        Yes.
-Assistant:  (calls create_video again with max_credits: 56 → job_id, then get_job)
+Assistant:  (calls create_video again with max_credits: 370 → job_id, then get_job)
             Here it is. It's saved in your PopNow library too.
 You:        Now give me an upbeat synth-pop track for it.
-Assistant:  (calls create_music → about 11 credits, under 30, starts at once)
+Assistant:  (calls create_music → about 72 credits, under 300, starts at once)
 ```
 
 ## The stdio bridge (`@popnow/mcp`)
@@ -424,7 +456,7 @@ Then point your client at the built file:
 | No **Connectors** / **Add custom MCP server** option | Your plan or workspace does not allow custom connectors | Ask the workspace admin |
 | "Please connect your PopNow account first." | The client called a tool before sign-in finished | Reconnect from the client's MCP or connector settings |
 | "This connection wasn't given permission to do that." | The connection was approved without the `generate` scope | Disconnect, connect again and press **Allow** |
-| *Needs confirmation, nothing started yet* | The job costs more than 30 credits | Say yes; the assistant repeats the call with `max_credits` |
+| *Needs confirmation, nothing started yet* | The job costs more than 300 credits | Say yes; the assistant repeats the call with `max_credits` |
 | "Not enough credits ... Nothing was charged." | Balance too low | Buy a [credit pack](https://popnow.ai/pricing), or pick a cheaper model or a shorter video |
 | "Too many creations at once. Nothing was charged." | More than 20 new creations in a minute | Wait the number of seconds in the message |
 | `401` with a `WWW-Authenticate` header | No token, or the API key is wrong or revoked | Send `Authorization: Bearer` with an active `sk-popnow-` key, or sign in again |
@@ -437,13 +469,13 @@ Then point your client at the built file:
 Add `https://api.popnow.ai/mcp` as a custom connector (Claude) or custom MCP server (ChatGPT), sign in to PopNow, and ask in plain words. The assistant calls `create_image`, `create_video` or another PopNow tool and returns the result in the chat.
 
 ### How do I generate a video from an image with an MCP server?
-Give the assistant a photo (attach it in ChatGPT, or paste a public `https` link elsewhere) and describe the motion. It calls `create_video` with `image_url`, which switches to image-to-video. About 28 credits for 5 seconds on the default model.
+Give the assistant a photo (attach it in ChatGPT, or paste a public `https` link elsewhere) and describe the motion. It calls `create_video` with `image_url`, which switches to image-to-video. About 185 credits for 5 seconds on the default model.
 
 ### Is there an MCP server for AI music and text-to-speech?
 Yes. PopNow's `create_music` makes original songs or instrumentals (Suno v6) and `create_speech` reads text aloud in many voices, languages and delivery styles.
 
 ### Does it cost extra to use PopNow in ChatGPT, Claude or Cursor?
-No. Connecting is free, and each creation costs the same credits as on popnow.ai. Failed creations are refunded automatically, and anything over 30 credits waits for your confirmation.
+No. Connecting is free, and each creation costs the same credits as on popnow.ai. Failed creations are refunded automatically, and anything over 300 credits waits for your confirmation.
 
 ### Do I need to install anything?
 No. PopNow is a hosted remote MCP server; you only add its URL. Clients that cannot connect to remote servers can use `mcp-remote`, or run the optional `@popnow/mcp` bridge with `npx -y @popnow/mcp`.
@@ -454,15 +486,18 @@ Yes. Send `Authorization: Bearer sk-popnow-...` with a key from the [API console
 ### Which AI models does the PopNow MCP server support?
 Image, video and audio models including Kling, Seedance, Wan, Vidu, MiniMax, Nano Banana, GPT Image, Flux and Suno, plus one-tap video effects. Ask the assistant to call `list_models` for the current list with prices, then name a model in your request.
 
+### How do I find a ready-made style for a launch video, slide deck or landing page?
+Ask the assistant, for example "find a style for our product launch video". It calls `find_skills`, shows you a few presets with preview links, and after you pick one calls `use_skill` to get its playbook and install link. Presets are free; only the generations they run cost credits. You can also browse the catalog at [popnow.ai/skills/agent-skills](https://popnow.ai/skills/agent-skills).
+
 ### Where do my creations go?
 You get a link in the chat, and everything is saved in your [PopNow library](https://popnow.ai/assets), just like creations made on the website.
 
 ## Links
 
-- Website: [popnow.ai](https://popnow.ai) · [Pricing](https://popnow.ai/pricing) · [Use PopNow in ChatGPT and Claude](https://popnow.ai/mcp)
+- Website: [popnow.ai](https://popnow.ai) · [Pricing](https://popnow.ai/pricing) · [Use PopNow in ChatGPT and Claude](https://popnow.ai/mcp) · [Agent Skills catalog](https://popnow.ai/skills/agent-skills)
 - Docs: [popnow.ai/docs](https://popnow.ai/docs) · [MCP guide](https://popnow.ai/docs/mcp) · [API reference (OpenAPI)](https://popnow.ai/docs/openapi) · [llms.txt](https://popnow.ai/llms.txt)
 - Other PopNow repos:
-  - [popnow-skills](https://github.com/popnow-ai/popnow-skills): agent skills for PopNow (`/plugin marketplace add popnow-ai/popnow-skills`)
+  - [popnow-skills](https://github.com/popnow-ai/popnow-skills): agent skills for PopNow, including `popnow-skill-finder` for the style-preset catalog (`/plugin marketplace add popnow-ai/popnow-skills` or `npx skills add popnow-ai/popnow-skills`)
   - [popnow-python](https://github.com/popnow-ai/popnow-python): Python SDK
   - [popnow-js](https://github.com/popnow-ai/popnow-js): JavaScript / TypeScript SDK
   - [popnow-api](https://github.com/popnow-ai/popnow-api): REST API examples and OpenAPI spec
