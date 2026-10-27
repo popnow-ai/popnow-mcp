@@ -7,6 +7,9 @@ All notable changes to this repository are documented here. The format follows
 
 ### Added
 
+- Agent Plugins v1 and Gemini CLI extension manifests for the existing hosted
+  MCP service, plus native Hermes OAuth and Gemini installation instructions.
+- A Cline installation guide and a 400 by 400 brand icon for marketplace review.
 - Documentation for the free style-preset tools `find_skills` (find ready-made Agent Skills for what the user wants to make, with preview links) and `use_skill` (the chosen preset's playbook, a short-lived download link with install commands, and which PopNow tools run its generation steps), including the find, pick and use flow with an example conversation.
 
 ### Changed

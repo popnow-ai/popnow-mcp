@@ -1,0 +1,14 @@
+{
+  "name": "popnow",
+  "version": "1.0.0",
+  "description": "Create images, video, music and voiceovers with your PopNow account through OAuth.",
+  "mcpServers": {
+    "popnow": {
+      "httpUrl": "https://api.popnow.ai/mcp",
+      "oauth": {
+        "enabled": true
+      },
+      "timeout": 180000
+    }
+  }
+}

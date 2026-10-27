@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "popnow",
+  "version": "1.0.0",
+  "description": "Create images, video, music and voiceovers through the PopNow remote MCP server.",
+  "author": {
+    "name": "PopNow AI, LLC",
+    "email": "support@popnow.ai",
+    "url": "https://popnow.ai"
+  },
+  "homepage": "https://popnow.ai/mcp",
+  "license": "MIT",
+  "keywords": ["image", "video", "music", "voiceover", "creative", "mcp"]
+}

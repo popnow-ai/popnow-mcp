@@ -29,6 +29,7 @@ This repository contains the public setup guide, copy-paste client configs in [`
 - [Tools](#tools)
 - [Style presets: find_skills and use_skill](#style-presets-find_skills-and-use_skill)
 - [Connect your client](#connect-your-client): [Claude](#claude-web-desktop-and-mobile) · [Claude Desktop (local)](#claude-desktop-local-config) · [Claude Code](#claude-code) · [ChatGPT](#chatgpt) · [Cursor](#cursor) · [VS Code](#vs-code) · [Windsurf](#windsurf) · [Cline](#cline) · [Codex CLI](#codex-cli) · [Other clients](#other-clients-and-your-own-code)
+- [Hermes Agent and Gemini CLI extensions](#hermes-agent-and-gemini-cli-extensions)
 - [Authentication](#authentication)
 - [Credits, prices and confirmation](#credits-prices-and-confirmation)
 - [Example prompts](#example-prompts)
@@ -270,6 +271,62 @@ Open **MCP Servers → Configure** and add PopNow to `cline_mcp_settings.json`. 
 ```
 
 The Cline CLI can also sign in with OAuth: remove `headers` and use **Authorize OAuth** in the `cline mcp` wizard.
+
+To add the hosted server directly from Cline CLI:
+
+```sh
+cline mcp add popnow https://api.popnow.ai/mcp --transport http --yes
+```
+
+The same steps are summarized in [`llms-install.md`](llms-install.md). Once
+signed in, call `check_balance` with `{}` to check the connection without
+spending credits.
+
+### Hermes Agent and Gemini CLI extensions
+
+This repository is also a portable [Agent Plugins v1](https://agent-plugins.org)
+package. It declares the hosted server in [`mcp.json`](mcp.json); it does not
+start a local executable or require the optional npm bridge.
+
+For [Hermes Agent](https://hermes-agent.nousresearch.com/docs/guides/use-mcp-with-hermes),
+use its native MCP configuration so OAuth is explicit. Add to the active
+profile's `config.yaml`:
+
+```yaml
+mcp_servers:
+  popnow:
+    url: https://api.popnow.ai/mcp
+    auth: oauth
+    trust: untrusted
+```
+
+Run `hermes mcp login popnow`, then start a new session or use `/reload-mcp`.
+The native configuration asks Hermes to require approval before write-capable
+calls, including generation. PopNow also enforces its returned price and
+confirmation requirements on the server. Reading a balance or listing models
+does not spend credits.
+
+For [Gemini CLI](https://geminicli.com/docs/extensions/):
+
+```sh
+gemini extensions install https://github.com/popnow-ai/popnow-mcp
+```
+
+The root [`gemini-extension.json`](gemini-extension.json) uses Streamable HTTP
+and OAuth. Run `/mcp auth popnow` in Gemini CLI to sign in if needed. Tool
+approval follows the client's normal policy.
+
+**Data and execution disclosure.** These manifests connect to
+`https://api.popnow.ai/mcp`. Only the tool arguments and media references sent
+by your client are passed to PopNow. Generation creates media in the connected
+account and spends its prepaid balance. The portable package has no hooks,
+local commands, background processes, or custom credential storage. The
+optional TypeScript stdio bridge elsewhere in this repository is used only
+when installed separately. Review the [Privacy Policy](https://popnow.ai/privacy)
+and [Terms](https://popnow.ai/terms), or contact support@popnow.ai.
+
+Marketplace review is separate from direct installation. These installation
+commands do not imply approval or endorsement by a client vendor.
 
 ### Codex CLI
 
