@@ -1,7 +1,3 @@
-# ~/.codex/config.toml
-# OAuth: run `codex mcp login popnow` after adding this block.
+# Sign in afterwards with: codex mcp login popnow
 [mcp_servers.popnow]
 url = "https://api.popnow.ai/mcp"
-
-# API key instead of OAuth: uncomment and export POPNOW_API_KEY in your shell.
-# bearer_token_env_var = "POPNOW_API_KEY"

@@ -32,6 +32,6 @@ The integration is free to install. Media generation consumes the user's
 prepaid PopNow balance. Follow each returned quote and confirmation requirement.
 Long-running jobs return a real job ID; use `get_job` to retrieve completion.
 
-Documentation: https://popnow.ai/docs/mcp
+Documentation: https://popnow.ai/learn/use-in-chatgpt-claude
 Privacy: https://popnow.ai/privacy
 Support: support@popnow.ai

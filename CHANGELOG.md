@@ -3,7 +3,7 @@
 All notable changes to this repository are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.2.0] - 2026-11-01
 
 ### Added
 
@@ -14,8 +14,19 @@ All notable changes to this repository are documented here. The format follows
 
 ### Changed
 
+- This repository is now the consumer guide only: sign in with your PopNow account (OAuth) and spend website
+  credits, in the ChatGPT and Claude apps or any MCP client. API key setups, examples and the `@popnow/mcp`
+  stdio bridge moved to [popnow-api-mcp](https://github.com/popnow-ai/popnow-api-mcp), the developer server at
+  `https://api.popnow.ai/api/v1/mcp` billed in USD.
+- `server.json` 0.2.0 lists the remote endpoint with OAuth sign-in only: no `Authorization` header and no npm package.
+- `https://api.popnow.ai/mcp` still accepts API keys until 31 January 2027 so existing setups keep working while they move.
 - Prices follow PopNow's new credit unit: 1 credit = $0.001 (it was $0.01), so every credit amount changed. Typical costs and examples are updated (an image about 48 credits, a 5-second video about 185, a song about 72), and the auto-start limit is now 300 credits (it was 30).
 - The tool summary no longer gives a fixed tool count.
+
+### Removed
+
+- `packages/popnow-mcp` and the API key examples (`claude-desktop.json`, `cursor-api-key.mcp.json`,
+  `generic-api-key.json`, `vscode-api-key.mcp.json`); they now live in popnow-api-mcp.
 
 ## [0.1.0] - 2026-10-19
 

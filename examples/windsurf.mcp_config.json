@@ -1,10 +1,7 @@
 {
   "mcpServers": {
     "popnow": {
-      "serverUrl": "https://api.popnow.ai/mcp",
-      "headers": {
-        "Authorization": "Bearer ${env:POPNOW_API_KEY}"
-      }
+      "serverUrl": "https://api.popnow.ai/mcp"
     }
   }
 }

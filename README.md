@@ -8,12 +8,11 @@
   </a>
 </p>
 
-<h1 align="center">PopNow MCP Server — AI image, video & music generation for ChatGPT, Claude, Cursor and any MCP client</h1>
+<h1 align="center">PopNow MCP Server — AI image, video & music generation in ChatGPT, Claude and any MCP client, with your PopNow account</h1>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
   <a href="https://modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP-Streamable%20HTTP-6f42c1.svg" alt="MCP Streamable HTTP"></a>
-  <a href="packages/popnow-mcp"><img src="https://img.shields.io/badge/TypeScript-stdio%20bridge-3178c6.svg" alt="TypeScript"></a>
   <a href="https://popnow.ai"><img src="https://img.shields.io/badge/site-popnow.ai-ff5a5f.svg" alt="popnow.ai"></a>
 </p>
 
@@ -21,7 +20,9 @@
 
 Ask in plain words ("turn this photo into a 5-second video", "make an upbeat synth-pop track") and the assistant picks the right PopNow tool, tells you the price, and returns the result in the chat. There is nothing to host: the server is remote, signs you in with OAuth 2.1, and uses the same models, prices and library as [popnow.ai](https://popnow.ai). It is also the home of PopNow's free [Agent Skills](#style-presets-find_skills-and-use_skill): ask for a style for your launch video, deck or landing page and the assistant shows you presets to pick from. Make it pop.
 
-This repository contains the public setup guide, copy-paste client configs in [`examples/`](examples), an [MCP registry manifest](server.json), and [`@popnow/mcp`](packages/popnow-mcp), a tiny optional stdio bridge for clients that only run local servers.
+This repository contains the public setup guide, copy-paste client configs in [`examples/`](examples) and an [MCP registry manifest](server.json).
+
+> Building with an API key (Claude Code, Cursor, Codex or your own code, billed in USD from an API balance)? Use the developer server in [popnow-api-mcp](https://github.com/popnow-ai/popnow-api-mcp). The `@popnow/mcp` npm bridge moved there too.
 
 ## Contents
 
@@ -33,7 +34,6 @@ This repository contains the public setup guide, copy-paste client configs in [`
 - [Authentication](#authentication)
 - [Credits, prices and confirmation](#credits-prices-and-confirmation)
 - [Example prompts](#example-prompts)
-- [The stdio bridge (`@popnow/mcp`)](#the-stdio-bridge-popnowmcp)
 - [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
 
@@ -52,7 +52,7 @@ No PopNow account yet? Sign up at [popnow.ai](https://popnow.ai) and pick a [cre
 | --- | --- |
 | Server URL | `https://api.popnow.ai/mcp` |
 | Transport | Streamable HTTP, stateless (`POST` only; `GET` and `DELETE` return `405`) |
-| Sign-in | OAuth 2.1 with PKCE and dynamic client registration, or `Authorization: Bearer sk-popnow-...` |
+| Sign-in | OAuth 2.1 with PKCE and dynamic client registration: you sign in with your PopNow account |
 | Scopes | `generate` (create with your credits) and `read` (balance, creations, model list) |
 | Tools | Generation, account and style-preset tools (listed below) |
 | Price | Same credits as popnow.ai (1 credit = $0.001). Up to 300 credits starts at once; anything above waits for your yes. Style presets are free |
@@ -76,7 +76,7 @@ No PopNow account yet? Sign up at [popnow.ai](https://popnow.ai) and pick a [cre
 | `find_skills` | Find ready-made style presets (Agent Skills) for what you want to make: product launch videos, slide decks, landing pages and websites, editorial images. Each option has a name, a one-line look, a preview video or picture, the PopNow generation it uses and what it needs locally | `intent` (your words), `type` (`video`, `image`, `slides`, `web`), `limit` (1 to 6, default 4) | free |
 | `use_skill` | Get the preset you picked: its full playbook (`SKILL.md`), a short-lived signed download link for the whole package with install commands for your coding agent, and which PopNow tools run its generation steps | `slug` (from `find_skills`), `agent` (`claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `opencode`, or `chat` without a file system) | free; each generation it runs is quoted first |
 
-- **Models.** Every generation tool that takes `model` accepts a PopNow model id from `list_models`, so "use Seedance" or "make it with Wan" just works. Models include Kling, Seedance, Wan, Vidu, MiniMax, Nano Banana, GPT Image, Flux, Suno and more; the live list is always `list_models` (or `GET /api/v1/models` on the [REST API](https://popnow.ai/docs/openapi)).
+- **Models.** Every generation tool that takes `model` accepts a PopNow model id from `list_models`, so "use Seedance" or "make it with Wan" just works. Models include Kling, Seedance, Wan, Vidu, MiniMax, Nano Banana, GPT Image, Flux, Suno and more; the live list is always `list_models`.
 - **Photos in.** `image_url` takes a public `https` link or a `popnow://` link from an earlier result. In ChatGPT, an attached photo arrives as the `image` file object.
 - **Results out.** Images come back inline as a preview plus a download link; videos and audio come back as links. Each result also has a permanent `popnow://` link you can pass to another tool ("now animate that picture"). Everything is saved in your [PopNow library](https://popnow.ai/assets).
 - **Annotations.** All tools carry the standard MCP hints. `get_job`, `list_my_creations`, `check_balance`, `list_models`, `find_skills` and `use_skill` are read-only, and no tool deletes anything.
@@ -84,7 +84,7 @@ No PopNow account yet? Sign up at [popnow.ai](https://popnow.ai) and pick a [cre
 
 ## Style presets: find_skills and use_skill
 
-PopNow keeps a catalog of free [Agent Skills](https://popnow.ai/skills/agent-skills): named styles for product launch videos, slide decks, landing pages and websites, editorial images and more, each with a preview and a full playbook that an AI agent follows to build the result. Two free tools bring the catalog into any MCP client:
+PopNow keeps a catalog of free [Agent Skills](https://popnow.ai/skills): named styles for product launch videos, slide decks, landing pages and websites, editorial images and more, each with a preview and a full playbook that an AI agent follows to build the result. Two free tools bring the catalog into any MCP client:
 
 1. **Find.** The assistant calls `find_skills` with what you want to make, in your words (optionally `type`: `video`, `image`, `slides` or `web`). It gets up to 6 options (4 by default), best first, each with a name, a one-line description of the look, a preview link, the PopNow generation it uses and its local requirements.
 2. **Pick.** The assistant shows you the options with their previews and asks which one you want.
@@ -108,11 +108,11 @@ You:        Yes.
 Assistant:  (calls create_video with max_credits: 185, then get_job, and keeps building the video)
 ```
 
-Outside MCP, the same catalog is available through the open API (`GET /api/v1/agent-skills`, `GET /api/v1/agent-skills/{slug}`, and `GET /api/v1/agent-skills/{slug}/download`, which redirects to a signed link; an API key is required), the `popnow-skill-finder` skill in [popnow-skills](https://github.com/popnow-ai/popnow-skills), and the [website](https://popnow.ai/skills/agent-skills).
+You can also browse the catalog and its previews on the [website](https://popnow.ai/skills); [Use a skill in ChatGPT or Claude](https://popnow.ai/learn/skills-in-chat) walks through it.
 
 ## Connect your client
 
-Every client below talks to the same remote server. OAuth sign-in is the default; each section also shows the API key alternative (see [Authentication](#authentication)). Ready-made files are in [`examples/`](examples).
+Every client below talks to the same remote server and signs in with your PopNow account (OAuth). Ready-made files are in [`examples/`](examples).
 
 ### Claude (web, desktop and mobile)
 
@@ -126,9 +126,7 @@ A connector added on the web also works in the Claude mobile apps. If you do not
 
 ### Claude Desktop (local config)
 
-Prefer the connector above. If you want PopNow in `claude_desktop_config.json` instead (macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`, Windows: `%APPDATA%\Claude\claude_desktop_config.json`), use the generic [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) stdio bridge.
-
-**With OAuth** ([`examples/claude-desktop-mcp-remote.json`](examples/claude-desktop-mcp-remote.json)):
+Prefer the connector above. If you want PopNow in `claude_desktop_config.json` instead (macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`, Windows: `%APPDATA%\Claude\claude_desktop_config.json`), use the generic [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) stdio bridge, which opens the PopNow sign-in page the first time ([`examples/claude-desktop-mcp-remote.json`](examples/claude-desktop-mcp-remote.json)):
 
 ```json
 {
@@ -141,32 +139,15 @@ Prefer the connector above. If you want PopNow in `claude_desktop_config.json` i
 }
 ```
 
-**With an API key** ([`examples/claude-desktop.json`](examples/claude-desktop.json)):
-
-```json
-{
-  "mcpServers": {
-    "popnow": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://api.popnow.ai/mcp", "--header", "Authorization:${POPNOW_AUTH}"],
-      "env": { "POPNOW_AUTH": "Bearer sk-popnow-..." }
-    }
-  }
-}
-```
-
-Keep `Authorization:${POPNOW_AUTH}` without spaces and put `Bearer ...` in the env block: some clients (Claude Desktop on Windows among them) do not escape spaces inside `args`. Restart Claude Desktop after editing the file. Both options need Node.js 18 or newer.
+Restart Claude Desktop after editing the file. `mcp-remote` needs Node.js 18 or newer.
 
 ### Claude Code
 
 ```bash
-# OAuth: run /mcp inside Claude Code afterwards and choose PopNow to sign in
 claude mcp add --transport http popnow https://api.popnow.ai/mcp
-
-# Or with an API key
-claude mcp add --transport http popnow https://api.popnow.ai/mcp \
-  --header "Authorization: Bearer $POPNOW_API_KEY"
 ```
+
+Then run `/mcp` inside Claude Code and choose PopNow to sign in.
 
 Add `--scope user` to make PopNow available in every project, or `--scope project` to share it through `.mcp.json`.
 
@@ -191,20 +172,7 @@ Add to `.cursor/mcp.json` in your project, or `~/.cursor/mcp.json` for all proje
 }
 ```
 
-Cursor starts the OAuth sign-in when it connects. With an API key instead ([`examples/cursor-api-key.mcp.json`](examples/cursor-api-key.mcp.json)):
-
-```json
-{
-  "mcpServers": {
-    "popnow": {
-      "url": "https://api.popnow.ai/mcp",
-      "headers": { "Authorization": "Bearer ${env:POPNOW_API_KEY}" }
-    }
-  }
-}
-```
-
-The [PopNow MCP page](https://popnow.ai/mcp) also has a one-click **Add to Cursor** button.
+Cursor starts the OAuth sign-in when it connects.
 
 ### VS Code
 
@@ -218,22 +186,7 @@ Add to `.vscode/mcp.json` (note the top-level key is `servers`) ([`examples/vsco
 }
 ```
 
-VS Code opens the sign-in page the first time the server starts. With an API key, let VS Code prompt for it and store it securely ([`examples/vscode-api-key.mcp.json`](examples/vscode-api-key.mcp.json)):
-
-```json
-{
-  "inputs": [
-    { "type": "promptString", "id": "popnow-api-key", "description": "PopNow API key (sk-popnow-...)", "password": true }
-  ],
-  "servers": {
-    "popnow": {
-      "type": "http",
-      "url": "https://api.popnow.ai/mcp",
-      "headers": { "Authorization": "Bearer ${input:popnow-api-key}" }
-    }
-  }
-}
-```
+VS Code opens the sign-in page the first time the server starts.
 
 ### Windsurf
 
@@ -243,14 +196,13 @@ Open the MCP settings in Windsurf and edit the raw `mcp_config.json` (its locati
 {
   "mcpServers": {
     "popnow": {
-      "serverUrl": "https://api.popnow.ai/mcp",
-      "headers": { "Authorization": "Bearer ${env:POPNOW_API_KEY}" }
+      "serverUrl": "https://api.popnow.ai/mcp"
     }
   }
 }
 ```
 
-Drop the `headers` block to sign in with OAuth instead. Press **Refresh** in the MCP panel after saving.
+Press **Refresh** in the MCP panel after saving, then sign in when Windsurf asks.
 
 ### Cline
 
@@ -262,7 +214,6 @@ Open **MCP Servers → Configure** and add PopNow to `cline_mcp_settings.json`. 
     "popnow": {
       "type": "streamableHttp",
       "url": "https://api.popnow.ai/mcp",
-      "headers": { "Authorization": "Bearer sk-popnow-..." },
       "disabled": false,
       "autoApprove": []
     }
@@ -270,7 +221,7 @@ Open **MCP Servers → Configure** and add PopNow to `cline_mcp_settings.json`. 
 }
 ```
 
-The Cline CLI can also sign in with OAuth: remove `headers` and use **Authorize OAuth** in the `cline mcp` wizard.
+Use **Authorize OAuth** in Cline (or in the `cline mcp` wizard of the Cline CLI) to sign in.
 
 To add the hosted server directly from Cline CLI:
 
@@ -320,9 +271,7 @@ approval follows the client's normal policy.
 `https://api.popnow.ai/mcp`. Only the tool arguments and media references sent
 by your client are passed to PopNow. Generation creates media in the connected
 account and spends its prepaid balance. The portable package has no hooks,
-local commands, background processes, or custom credential storage. The
-optional TypeScript stdio bridge elsewhere in this repository is used only
-when installed separately. Review the [Privacy Policy](https://popnow.ai/privacy)
+local commands, background processes, or custom credential storage. Review the [Privacy Policy](https://popnow.ai/privacy)
 and [Terms](https://popnow.ai/terms), or contact support@popnow.ai.
 
 Marketplace review is separate from direct installation. These installation
@@ -331,82 +280,30 @@ commands do not imply approval or endorsement by a client vendor.
 ### Codex CLI
 
 ```bash
-# OAuth
 codex mcp add popnow --url https://api.popnow.ai/mcp
 codex mcp login popnow
 ```
 
-Or edit `~/.codex/config.toml` ([`examples/codex.config.toml`](examples/codex.config.toml)); `bearer_token_env_var` reads an API key from your environment:
+Or add it to `~/.codex/config.toml` ([`examples/codex.config.toml`](examples/codex.config.toml)) and run `codex mcp login popnow`:
 
 ```toml
 [mcp_servers.popnow]
 url = "https://api.popnow.ai/mcp"
-bearer_token_env_var = "POPNOW_API_KEY"
 ```
 
-### Other clients and your own code
+### Other clients
 
-Any client that speaks Streamable HTTP can use the same URL ([`examples/generic.json`](examples/generic.json), [`examples/generic-api-key.json`](examples/generic-api-key.json)). Clients that only run local stdio servers can use `mcp-remote` (as in the [Claude Desktop](#claude-desktop-local-config) configs) or build [`@popnow/mcp`](#the-stdio-bridge-popnowmcp) from source.
+Any client that speaks Streamable HTTP and supports OAuth sign-in can use the same URL ([`examples/generic.json`](examples/generic.json)). Clients that only run local stdio servers can use `mcp-remote`, as in the [Claude Desktop](#claude-desktop-local-config) config.
 
-From code, with the official TypeScript SDK (`npm install @modelcontextprotocol/sdk`):
-
-```javascript
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
-
-const transport = new StreamableHTTPClientTransport(new URL('https://api.popnow.ai/mcp'), {
-  requestInit: { headers: { Authorization: `Bearer ${process.env.POPNOW_API_KEY}` } },
-});
-const client = new Client({ name: 'my-app', version: '1.0.0' });
-await client.connect(transport);
-
-const result = await client.callTool({ name: 'check_balance', arguments: {} });
-console.log(result.content[0].text);
-await client.close();
-```
-
-With the Python SDK (`pip install mcp`):
-
-```python
-import asyncio, os
-
-from mcp import ClientSession
-from mcp.client.streamable_http import streamablehttp_client
-
-async def main():
-    headers = {"Authorization": f"Bearer {os.environ['POPNOW_API_KEY']}"}
-    async with streamablehttp_client("https://api.popnow.ai/mcp", headers=headers) as (read, write, _):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
-            result = await session.call_tool(
-                "create_image",
-                {"prompt": "A paper boat on a rainy window sill, soft morning light", "aspect_ratio": "4:5"},
-            )
-            for part in result.content:
-                print(part.type, getattr(part, "text", ""))
-
-asyncio.run(main())
-```
-
-Or with `curl`. The server is stateless, so every request stands alone; send both media types in `Accept`:
-
-```bash
-curl -X POST "https://api.popnow.ai/mcp" \
-  -H "Authorization: Bearer $POPNOW_API_KEY" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": "check_balance", "arguments": {}}}'
-```
-
-For production code that calls models directly, the [PopNow REST API](https://popnow.ai/docs/quickstart) gives you every model parameter, webhooks, idempotency keys and per-task retention.
+To call PopNow from your own code, scripts or CI with an API key, use the developer server in [popnow-api-mcp](https://github.com/popnow-ai/popnow-api-mcp) or the [PopNow REST API](https://popnow.ai/docs/quickstart).
 
 ## Authentication
 
 **OAuth 2.1 (default).** PopNow is a standard OAuth 2.1 authorization server: authorization code with PKCE (S256), refresh tokens, dynamic client registration (RFC 7591) and client ID metadata documents. Discovery starts from the `401` on `/mcp`, whose `WWW-Authenticate` header points to `/.well-known/oauth-protected-resource/mcp`; server metadata is at `/.well-known/oauth-authorization-server`. The consent page shows the app's name and the two scopes, `generate` and `read`. Access tokens last one hour and refresh automatically; a connection stays signed in until it goes unused for 90 days. The AI app never sees your password or payment details.
 
-**API key (alternative).** Scripts, CI jobs and agents without a browser can send a key from the [API console](https://popnow.ai/api/console/keys) as `Authorization: Bearer sk-popnow-...`. The key's model allow-list, IP allow-list and daily, monthly and lifetime spend caps apply, exactly as on the REST API. Give each agent its own key with a low daily cap, and keep keys out of files you commit: use your client's environment variable or secure input support.
+**API keys** are for developers. They are billed in USD from a separate API balance and connect to the developer server at `https://api.popnow.ai/api/v1/mcp`; see [popnow-api-mcp](https://github.com/popnow-ai/popnow-api-mcp). This address still accepts API keys until 31 January 2027 so existing setups keep working while they move.
 
-**Disconnect** at any time in **Account settings → Devices → Connected AI apps** on [popnow.ai](https://popnow.ai/me/settings/sessions). For key-based clients, revoke the key in the API console.
+**Disconnect** at any time in **Account settings → Devices → Connected AI apps** on [popnow.ai](https://popnow.ai/me/settings/sessions).
 
 ## Credits, prices and confirmation
 
@@ -455,56 +352,9 @@ You:        Now give me an upbeat synth-pop track for it.
 Assistant:  (calls create_music → about 72 credits, under 300, starts at once)
 ```
 
-## The stdio bridge (`@popnow/mcp`)
-
-[`packages/popnow-mcp`](packages/popnow-mcp) is a minimal TypeScript package (bin `popnow-mcp`) for MCP clients that can only launch local stdio servers. It connects a `StdioServerTransport` to a `StreamableHTTPClientTransport` from the official MCP SDK and forwards every message unchanged, so tools and prices always match the live server.
-
-It is published on npm as [`@popnow/mcp`](https://www.npmjs.com/package/@popnow/mcp), so `npx` runs it with no install step:
-
-```json
-{
-  "mcpServers": {
-    "popnow": {
-      "command": "npx",
-      "args": ["-y", "@popnow/mcp"],
-      "env": { "POPNOW_API_KEY": "sk-popnow-..." }
-    }
-  }
-}
-```
-
-| Environment variable | Required | Description |
-| --- | --- | --- |
-| `POPNOW_API_KEY` | yes | PopNow API key (`sk-popnow-...`), sent as a Bearer token |
-| `POPNOW_MCP_URL` | no | Remote endpoint, default `https://api.popnow.ai/mcp` |
-
-To build and run it from source instead (Node.js 18 or newer):
-
-```bash
-git clone https://github.com/popnow-ai/popnow-mcp.git
-cd popnow-mcp
-npm --prefix packages/popnow-mcp install
-npm --prefix packages/popnow-mcp test    # builds with tsc, then runs an end-to-end test against a local fake server
-node packages/popnow-mcp/dist/cli.js --help
-```
-
-Then point your client at the built file:
-
-```json
-{
-  "mcpServers": {
-    "popnow": {
-      "command": "node",
-      "args": ["/absolute/path/to/popnow-mcp/packages/popnow-mcp/dist/cli.js"],
-      "env": { "POPNOW_API_KEY": "sk-popnow-..." }
-    }
-  }
-}
-```
-
 ## MCP registry manifest
 
-[`server.json`](server.json) describes the server in the [MCP registry](https://github.com/modelcontextprotocol/registry) format (schema `2025-12-11`): the remote Streamable HTTP endpoint with an optional `Authorization` header.
+[`server.json`](server.json) describes the server in the [MCP registry](https://github.com/modelcontextprotocol/registry) format (schema `2025-12-11`): the remote Streamable HTTP endpoint with OAuth sign-in.
 
 ## Troubleshooting
 
@@ -516,7 +366,7 @@ Then point your client at the built file:
 | *Needs confirmation, nothing started yet* | The job costs more than 300 credits | Say yes; the assistant repeats the call with `max_credits` |
 | "Not enough credits ... Nothing was charged." | Balance too low | Buy a [credit pack](https://popnow.ai/pricing), or pick a cheaper model or a shorter video |
 | "Too many creations at once. Nothing was charged." | More than 20 new creations in a minute | Wait the number of seconds in the message |
-| `401` with a `WWW-Authenticate` header | No token, or the API key is wrong or revoked | Send `Authorization: Bearer` with an active `sk-popnow-` key, or sign in again |
+| `401` with a `WWW-Authenticate` header | Not signed in yet, or the sign-in expired | Reconnect from the client's MCP or connector settings and sign in again |
 | `405 Method Not Allowed` | `GET` or `DELETE` to `/mcp`; the server is stateless | Use `POST` (any MCP client does this for you) |
 | Cline connects but nothing works | `type` missing, so Cline used legacy SSE | Set `"type": "streamableHttp"` |
 
@@ -535,30 +385,25 @@ Yes. PopNow's `create_music` makes original songs or instrumentals (Suno v6) and
 No. Connecting is free, and each creation costs the same credits as on popnow.ai. Failed creations are refunded automatically, and anything over 300 credits waits for your confirmation.
 
 ### Do I need to install anything?
-No. PopNow is a hosted remote MCP server; you only add its URL. Clients that cannot connect to remote servers can use `mcp-remote`, or run the optional `@popnow/mcp` bridge with `npx -y @popnow/mcp`.
+No. PopNow is a hosted remote MCP server; you only add its URL. Clients that cannot connect to remote servers can use `mcp-remote`.
 
 ### Can I use an API key instead of OAuth?
-Yes. Send `Authorization: Bearer sk-popnow-...` with a key from the [API console](https://popnow.ai/api/console/keys). Spend caps and allow-lists on the key apply.
+API keys belong to the developer server at `https://api.popnow.ai/api/v1/mcp`, billed in USD from your API balance rather than your website credits. See [popnow-api-mcp](https://github.com/popnow-ai/popnow-api-mcp).
 
 ### Which AI models does the PopNow MCP server support?
 Image, video and audio models including Kling, Seedance, Wan, Vidu, MiniMax, Nano Banana, GPT Image, Flux and Suno, plus one-tap video effects. Ask the assistant to call `list_models` for the current list with prices, then name a model in your request.
 
 ### How do I find a ready-made style for a launch video, slide deck or landing page?
-Ask the assistant, for example "find a style for our product launch video". It calls `find_skills`, shows you a few presets with preview links, and after you pick one calls `use_skill` to get its playbook and install link. Presets are free; only the generations they run cost credits. You can also browse the catalog at [popnow.ai/skills/agent-skills](https://popnow.ai/skills/agent-skills).
+Ask the assistant, for example "find a style for our product launch video". It calls `find_skills`, shows you a few presets with preview links, and after you pick one calls `use_skill` to get its playbook and install link. Presets are free; only the generations they run cost credits. You can also browse the catalog at [popnow.ai/skills](https://popnow.ai/skills).
 
 ### Where do my creations go?
 You get a link in the chat, and everything is saved in your [PopNow library](https://popnow.ai/assets), just like creations made on the website.
 
 ## Links
 
-- Website: [popnow.ai](https://popnow.ai) · [Pricing](https://popnow.ai/pricing) · [Use PopNow in ChatGPT and Claude](https://popnow.ai/mcp) · [Agent Skills catalog](https://popnow.ai/skills/agent-skills)
-- Docs: [popnow.ai/docs](https://popnow.ai/docs) · [MCP guide](https://popnow.ai/docs/mcp) · [API reference (OpenAPI)](https://popnow.ai/docs/openapi) · [llms.txt](https://popnow.ai/llms.txt)
-- Other PopNow repos:
-  - [popnow-skills](https://github.com/popnow-ai/popnow-skills): agent skills for PopNow, including `popnow-skill-finder` for the style-preset catalog (`/plugin marketplace add popnow-ai/popnow-skills` or `npx skills add popnow-ai/popnow-skills`)
-  - [popnow-python](https://github.com/popnow-ai/popnow-python): Python SDK
-  - [popnow-js](https://github.com/popnow-ai/popnow-js): JavaScript / TypeScript SDK
-  - [popnow-api](https://github.com/popnow-ai/popnow-api): REST API examples and OpenAPI spec
-  - [popnow-blender](https://github.com/popnow-ai/popnow-blender): Blender add-on
+- Website: [popnow.ai](https://popnow.ai) · [Pricing](https://popnow.ai/pricing) · [Use PopNow in ChatGPT and Claude](https://popnow.ai/mcp) · [Skills](https://popnow.ai/skills)
+- Help: [Use PopNow in ChatGPT and Claude](https://popnow.ai/learn/use-in-chatgpt-claude) · [Use a skill in ChatGPT or Claude](https://popnow.ai/learn/skills-in-chat) · [Tutorials](https://popnow.ai/learn)
+- For developers: [popnow-api-mcp](https://github.com/popnow-ai/popnow-api-mcp), the API key MCP server billed in USD
 
 ## Contributing
 
