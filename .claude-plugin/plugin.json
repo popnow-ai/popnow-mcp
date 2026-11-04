@@ -1,0 +1,25 @@
+{
+  "name": "popnow-mcp",
+  "version": "1.0.0",
+  "description": "Connect Claude Code to the PopNow remote MCP server with your PopNow account: create images, videos, music and voiceovers with Nano Banana, Seedream, GPT Image, Seedance, Kling, MiniMax and Suno, paid from website credits after you approve each price. Sign in with OAuth, no API key needed.",
+  "author": {
+    "name": "PopNow",
+    "email": "support@popnow.ai",
+    "url": "https://popnow.ai"
+  },
+  "homepage": "https://popnow.ai/mcp",
+  "repository": "https://github.com/popnow-ai/popnow-mcp",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "oauth",
+    "creative",
+    "popnow",
+    "ai-video",
+    "ai-image",
+    "ai-music",
+    "text-to-speech",
+    "text-to-video",
+    "image-to-video"
+  ]
+}
