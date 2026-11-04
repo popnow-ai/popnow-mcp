@@ -370,6 +370,13 @@ Assistant:  (calls create_music → about 72 credits, under 300, starts at once)
 | `405 Method Not Allowed` | `GET` or `DELETE` to `/mcp`; the server is stateless | Use `POST` (any MCP client does this for you) |
 | Cline connects but nothing works | `type` missing, so Cline used legacy SSE | Set `"type": "streamableHttp"` |
 
+## Claude Code plugin
+
+```text
+/plugin marketplace add popnow-ai/popnow-mcp
+/plugin install popnow-mcp@popnow-mcp
+```
+
 ## FAQ
 
 ### How do I generate AI images and videos from Claude or ChatGPT?
