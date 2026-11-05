@@ -307,7 +307,7 @@ To call PopNow from your own code, scripts or CI with an API key, use the develo
 
 ## Credits, prices and confirmation
 
-Connecting is free, and so are `find_skills` and `use_skill`. Every creation spends the same credits as on popnow.ai, at the same prices, from the same balance: 1 credit = $0.001. PopNow sells credit packs with no subscription, from Starter ($9, 9,000 credits) to Pro ($99, 120,000 credits including bonus), or any amount from $10 to $2,000 at 1,000 credits per $1; see [pricing](https://popnow.ai/pricing).
+Connecting is free, and so are `find_skills` and `use_skill`. Every creation spends the same credits as on popnow.ai, at the same prices, from the same balance: 1 credit = $0.001. PopNow sells credit packs with no subscription, from Starter ($10, 10,000 credits) to Pro ($100, 112,000 credits including bonus), or any amount from $10 to $2,000 at 1,000 credits per $1; see [pricing](https://popnow.ai/pricing).
 
 Every generation tool quotes first:
 
