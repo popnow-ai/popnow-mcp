@@ -1,6 +1,6 @@
 {
   "name": "popnow",
-  "version": "1.0.0",
+  "version": "0.2.1",
   "description": "Create images, video, music and voiceovers with your PopNow account through OAuth.",
   "mcpServers": {
     "popnow": {

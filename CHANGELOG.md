@@ -3,6 +3,13 @@
 All notable changes to this repository are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - 2026-11-05
+
+### Changed
+
+- Credit pack prices in the README and `llms.txt` now match popnow.ai/pricing ($10 Starter to $100 Pro).
+- The Gemini CLI extension manifest version now follows the repository tags.
+
 ## [0.2.0] - 2026-11-01
 
 ### Added
