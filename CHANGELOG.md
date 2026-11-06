@@ -3,6 +3,12 @@
 All notable changes to this repository are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses [Semantic Versioning](https://semver.org/).
 
+## [0.2.2] - 2026-11-06
+
+### Fixed
+
+- `server.json` now follows the repository tags, so the release publishes to the MCP Registry. The v0.2.1 tag failed that check.
+
 ## [0.2.1] - 2026-11-05
 
 ### Changed
