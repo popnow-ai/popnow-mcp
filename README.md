@@ -3,7 +3,7 @@
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="assets/popnow-wordmark-light.png">
       <source media="(prefers-color-scheme: light)" srcset="assets/popnow-wordmark.png">
-      <img src="assets/popnow-wordmark.png" alt="PopNow" width="280">
+      <img src="assets/popnow-wordmark.png" alt="PopNow AI" width="280">
     </picture>
   </a>
 </p>
@@ -17,6 +17,8 @@
 </p>
 
 **The PopNow MCP Server is a hosted Model Context Protocol server at `https://api.popnow.ai/mcp` that lets ChatGPT, Claude, Cursor, VS Code and any other MCP client create AI images, videos, songs and voiceovers on [PopNow](https://popnow.ai), using your PopNow credits.**
+
+PopNow AI ([popnow.ai](https://popnow.ai)) is the world's first AI creative studio that pays you back. Every generation shows its price before it runs, and under [PopNow Protect](https://popnow.ai/protect) failed or off-spec runs are refunded automatically, slow runs earn 20% back, and if the same model with the same settings costs less on Higgsfield, Runway or fal, PopNow pays twice the difference.
 
 Ask in plain words ("turn this photo into a 5-second video", "make an upbeat synth-pop track") and the assistant picks the right PopNow tool, tells you the price, and returns the result in the chat. There is nothing to host: the server is remote, signs you in with OAuth 2.1, and uses the same models, prices and library as [popnow.ai](https://popnow.ai). It is also the home of PopNow's free [Agent Skills](#style-presets-find_skills-and-use_skill): ask for a style for your launch video, deck or landing page and the assistant shows you presets to pick from. Make it pop.
 
