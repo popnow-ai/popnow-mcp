@@ -61,22 +61,36 @@ No PopNow account yet? Sign up at [popnow.ai](https://popnow.ai) and pick a [cre
 
 ## Tools
 
-| Tool | What it does | Key parameters | Typical cost |
-| --- | --- | --- | --- |
-| `create_image` | Make a new picture from a description | `prompt`, `aspect_ratio` (default `1:1`), `model`, `max_credits` | about 48 credits (default Nano Banana 2.1) |
-| `edit_image` | Change a photo with words: new style, outfit, background, add or remove things | `prompt`, `image_url` / `image`, `more_image_urls`, `aspect_ratio`, `model`, `max_credits` | about 48 credits |
-| `create_video` | Make a short video from a description, or bring a photo to life (text-to-video and image-to-video) | `prompt`, `image_url` / `image`, `duration_seconds` (default 5), `aspect_ratio` (default `16:9`), `model`, `max_credits` | about 185 credits for 5 s (default MiniMax H3); 1 to 3 minutes |
-| `create_music` | Make an original song or instrumental track | `prompt`, `lyrics`, `instrumental`, `voice` (`female` / `male`), `title`, `max_credits` | about 72 credits per song (Suno v6) |
-| `create_speech` | Turn text into natural speech in many voices and languages | `text`, `voice` (Kore, Puck, Charon, Aoede, Fenrir, Leda ...), `style` (`whisper`, `empathetic`, `vocal_smile`, `newscaster`, `promo_hype`, `deadpan`), `max_credits` | priced by length, about 20 credits per minute of audio |
-| `apply_effect` | Turn a photo into a trending effect video (Zombie Turn, Flying Car, Tiny Planet, Molten Gold, Hyperdrive ...) or a photo makeover (Clay Figure, Pixel Art ...) | `effect` (name or id), `image_url` / `image`, `max_credits` | about 125 to 340 credits per video, 30 to 50 per photo makeover; quoted first |
-| `remove_background` | Cut out the subject and make the background transparent | `image_url` / `image`, `max_credits` | about 5 credits |
-| `upscale` | Make a photo or video sharper and bigger | `image_url` / `image` or `video_url`, `size` (photos `2k`, `4k`, `8k`; videos `720p`, `1080p`, `2k`, `4k`), `max_credits` | about 12 credits for a photo; videos by length |
-| `get_job` | Check on a creation that is still running and return it when ready | `job_id`, `wait_seconds` (0 to 50, default 30) | free |
-| `list_my_creations` | Show your recent PopNow creations with links | `kind` (`image`, `video`, `audio`), `limit` (1 to 20, default 10) | free |
-| `check_balance` | Show how many credits you have left (and how many are held for running jobs) | none | free |
-| `list_models` | List the image, video and audio models, or every effect, with prices | `category` (`image`, `video`, `audio`, `effects`) | free |
-| `find_skills` | Find ready-made style presets (Agent Skills) for what you want to make: product launch videos, slide decks, landing pages and websites, editorial images. Each option has a name, a one-line look, a preview video or picture, the PopNow generation it uses and what it needs locally | `intent` (your words), `type` (`video`, `image`, `slides`, `web`), `limit` (1 to 6, default 4) | free |
-| `use_skill` | Get the preset you picked: its full playbook (`SKILL.md`), a short-lived signed download link for the whole package with install commands for your coding agent, and which PopNow tools run its generation steps | `slug` (from `find_skills`), `agent` (`claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `opencode`, or `chat` without a file system) | free; each generation it runs is quoted first |
+The server lists 86 tools today. The core ones, with typical costs:
+
+| Tool | What it does | Typical cost |
+| --- | --- | --- |
+| `create_image` | Make a new picture from a description, optionally in a ready-made `style` or with a saved character | about 48 credits (default Nano Banana 2.1) |
+| `edit_image` | Change a photo with words: new style, outfit, background, add or remove things | about 48 credits |
+| `create_video` | Make a short video from a description, or bring a photo to life | about 185 credits for 5 s; 1 to 3 minutes |
+| `create_music` | Make an original song or instrumental track | about 72 credits per song |
+| `create_speech` | Turn text into natural speech in many voices and languages | about 20 credits per minute of audio |
+| `apply_effect` | Turn a photo into a trending effect video or a photo makeover | about 125 to 340 credits per video |
+| `get_job` | Check on a creation that is still running and return it when ready | free |
+| `check_balance` | Show how many credits you have left | free |
+| `list_models` | List the image, video and audio models, or every effect, with prices | free |
+
+Every other tool, by area:
+
+| Area | Tools |
+| --- | --- |
+| Photo fixes | `remove_background`, `upscale`, `erase_object`, `expand_image`, `change_camera_angle`, `change_pose`, `relight_photo`, `remove_shadow`, `anime_to_real`, `split_layers` |
+| Video | `create_video_from_references`, `extend_video`, `edit_video`, `edit_video_region`, `copy_motion`, `draw_to_video`, `reframe_video` (free), `compose_video` (free) |
+| Audio and voice | `create_sound_effects`, `add_sound`, `list_voices`, `transcribe_audio`, `change_voice`, `lip_sync`, `translate_video`, `make_talking_avatar` |
+| 3D | `create_3d`, `rig_3d`, `list_animations` |
+| Ads and studios | `make_ugc_ad`, `make_brand_film`, `make_explainer`, `check_hook`, `import_product`, `list_products`, `list_brands`, `list_studio_templates`, `recreate_template`, `get_template_run`, `resume_template_run`, `create_project`, `add_project_material`, `get_project_plan`, `revise_project_plan`, `produce_project`, `get_project`, `list_projects` |
+| Characters and library | `create_character`, `list_characters`, `save_to_library`, `get_asset`, `list_my_creations`, `request_upload`, `get_upload` |
+| Batches, prompts and prices | `run_batch`, `get_batch`, `estimate_cost`, `list_presets`, `optimize_prompt` |
+| Playbooks, presets and your recipes | `list_playbooks`, `use_playbook`, `run_playbook_step`, `find_skills`, `use_skill`, `list_my_recipes`, `run_my_recipe`, `get_recipe_run`, `resume_recipe_run`, `list_my_skills`, `use_my_skill`, `open_handoff` |
+| Canvas | `list_canvases`, `get_canvas`, `add_to_canvas`, `open_canvas` |
+| Browser games | `deploy_game` (free), `publish_game` |
+
+The live list is whatever your client shows after it connects; prices are always quoted by the tool itself.
 
 - **Models.** Every generation tool that takes `model` accepts a PopNow model id from `list_models`, so "use Seedance" or "make it with Wan" just works. Models include Kling, Seedance, Wan, Vidu, MiniMax, Nano Banana, GPT Image, Flux, Suno and more; the live list is always `list_models`.
 - **Photos in.** `image_url` takes a public `https` link or a `popnow://` link from an earlier result. In ChatGPT, an attached photo arrives as the `image` file object.
@@ -145,6 +159,15 @@ Restart Claude Desktop after editing the file. `mcp-remote` needs Node.js 18 or 
 
 ### Claude Code
 
+Install the PopNow plugin. It connects the server and adds skills that pick the right tool and ask before paid runs, plus a `/popnow` command:
+
+```text
+/plugin marketplace add popnow-ai/popnow-mcp
+/plugin install popnow-mcp@popnow-mcp
+```
+
+Or connect only the server:
+
 ```bash
 claude mcp add --transport http popnow https://api.popnow.ai/mcp
 ```
@@ -164,7 +187,7 @@ Custom MCP servers depend on your ChatGPT plan and workspace settings, and menu 
 
 ### Cursor
 
-Add to `.cursor/mcp.json` in your project, or `~/.cursor/mcp.json` for all projects ([`examples/cursor.mcp.json`](examples/cursor.mcp.json)):
+The PopNow plugin for Cursor (in this repository: [`.cursor-plugin`](.cursor-plugin/plugin.json)) connects the server and adds the same skills and the `/popnow` command. To install it from source, copy this repository into `~/.cursor/plugins/local/popnow/` and reload Cursor. Or connect only the server: add `.cursor/mcp.json` in your project, or `~/.cursor/mcp.json` for all projects ([`examples/cursor.mcp.json`](examples/cursor.mcp.json)):
 
 ```json
 {
@@ -281,6 +304,8 @@ commands do not imply approval or endorsement by a client vendor.
 
 ### Codex CLI
 
+This repository is also a Codex plugin ([`.codex-plugin`](.codex-plugin/plugin.json)) with the same skills. Or connect only the server:
+
 ```bash
 codex mcp add popnow --url https://api.popnow.ai/mcp
 codex mcp login popnow
@@ -372,12 +397,19 @@ Assistant:  (calls create_music → about 72 credits, under 300, starts at once)
 | `405 Method Not Allowed` | `GET` or `DELETE` to `/mcp`; the server is stateless | Use `POST` (any MCP client does this for you) |
 | Cline connects but nothing works | `type` missing, so Cline used legacy SSE | Set `"type": "streamableHttp"` |
 
-## Claude Code plugin
+## Plugin skills
 
-```text
-/plugin marketplace add popnow-ai/popnow-mcp
-/plugin install popnow-mcp@popnow-mcp
-```
+The Claude Code, Cursor and Codex plugins in this repository add five skills and one command on top of the server. They only describe which PopNow tool to use, in what order, and when to ask the user about price or consent; the work itself happens on PopNow.
+
+| Skill | Use it for |
+| --- | --- |
+| [`popnow-create`](skills/popnow-create/SKILL.md) | Pictures, photo edits, videos, music, voiceovers, sound, 3D, canvases, credits and past creations |
+| [`popnow-ads`](skills/popnow-ads/SKILL.md) | Creator-style ads, brand films, marketing templates with your product, story ads, ad variants, hook scores |
+| [`popnow-explainer`](skills/popnow-explainer/SKILL.md) | Narrated explainers and faceless videos |
+| [`popnow-characters`](skills/popnow-characters/SKILL.md) | The same person, mascot or product across creations |
+| [`popnow-game-builder`](skills/popnow-game-builder/SKILL.md) | Browser games with PopNow art and sound, online at a link anyone can play |
+
+`/popnow <what you want>` is the natural-language entry point. Other skill-compatible agents can install the skills with `npx skills add popnow-ai/popnow-mcp`; they still need the server connected.
 
 ## FAQ
 

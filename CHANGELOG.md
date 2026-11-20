@@ -3,6 +3,17 @@
 All notable changes to this repository are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-11-21
+
+### Added
+
+- Five skills for the plugins: `popnow-create`, `popnow-ads`, `popnow-explainer`, `popnow-characters` and `popnow-game-builder`, plus a `/popnow` command. They tell the agent which PopNow tool to use, in what order, and when to ask the user about price or consent.
+- Cursor (`.cursor-plugin`) and Codex (`.codex-plugin`) plugin manifests next to the Claude Code one, all at plugin version 1.1.0, with a 512 px icon.
+
+### Changed
+
+- The README and `llms.txt` list all 86 tools the server offers today, grouped by area, and show the plugin install for Claude Code, Cursor and Codex.
+
 ## [0.2.2] - 2026-11-06
 
 ### Fixed

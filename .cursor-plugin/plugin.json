@@ -1,0 +1,38 @@
+{
+  "name": "popnow",
+  "displayName": "PopNow",
+  "version": "1.1.0",
+  "description": "Create images, videos, music, voiceovers, ads, explainers, 3D models and browser games with your PopNow account through the PopNow MCP server. Sign in with OAuth; every larger job shows its price in credits and waits for your yes.",
+  "author": {
+    "name": "PopNow AI, LLC",
+    "email": "support@popnow.ai"
+  },
+  "publisher": "PopNow",
+  "homepage": "https://popnow.ai/mcp",
+  "repository": "https://github.com/popnow-ai/popnow-mcp",
+  "license": "MIT",
+  "logo": "assets/popnow-icon-512.png",
+  "keywords": [
+    "popnow",
+    "mcp",
+    "image-generation",
+    "video-generation",
+    "ai-music",
+    "text-to-speech",
+    "ugc-ads",
+    "explainer-video",
+    "browser-games"
+  ],
+  "category": "ai-content",
+  "tags": [
+    "media",
+    "creative",
+    "ai-generation",
+    "video",
+    "image",
+    "audio"
+  ],
+  "commands": "./commands/",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

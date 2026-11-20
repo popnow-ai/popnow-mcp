@@ -1,0 +1,48 @@
+{
+  "name": "popnow",
+  "version": "1.1.0",
+  "description": "Create images, videos, music, voiceovers, ads, explainers, 3D models and browser games with your PopNow account through the PopNow MCP server.",
+  "author": {
+    "name": "PopNow AI, LLC",
+    "email": "support@popnow.ai",
+    "url": "https://popnow.ai"
+  },
+  "homepage": "https://popnow.ai/mcp",
+  "repository": "https://github.com/popnow-ai/popnow-mcp",
+  "license": "MIT",
+  "keywords": [
+    "popnow",
+    "mcp",
+    "image-generation",
+    "video-generation",
+    "ai-music",
+    "text-to-speech",
+    "ugc-ads",
+    "explainer-video",
+    "browser-games"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "interface": {
+    "displayName": "PopNow",
+    "shortDescription": "Images, video, music, ads and games with your PopNow account",
+    "longDescription": "PopNow turns Codex into a creative studio. Make and edit pictures and videos, write songs and voiceovers, add sound, make 3D models, creator-style ads, brand films and narrated explainers, keep the same character across shots, and build browser games that PopNow puts online at a link anyone can play. Sign in with your PopNow account (OAuth). Larger jobs show their price in PopNow credits first and start only after you say yes.",
+    "developerName": "PopNow AI, LLC",
+    "category": "Design",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://popnow.ai/mcp",
+    "privacyPolicyURL": "https://popnow.ai/privacy",
+    "termsOfServiceURL": "https://popnow.ai/terms",
+    "defaultPrompt": [
+      "Make a cinematic poster of a lighthouse in a storm, 16:9",
+      "Turn this product photo into a 5-second vertical video",
+      "Build a tiny browser game where a cat catches falling fish and put it online"
+    ],
+    "brandColor": "#E65A2F",
+    "composerIcon": "./assets/popnow-icon-512.png",
+    "logo": "./assets/popnow-icon-512.png"
+  }
+}

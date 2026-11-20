@@ -14,9 +14,9 @@ jobs:
         with:
           node-version: 24
       - name: Check example configs and manifests are valid JSON
-        run: for f in examples/*.json server.json mcp.json .mcp.json plugin.json gemini-extension.json; do node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$f"; done
+        run: for f in examples/*.json server.json mcp.json .mcp.json plugin.json gemini-extension.json .claude-plugin/*.json .cursor-plugin/plugin.json .codex-plugin/plugin.json; do node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$f"; done
       - name: This repository is OAuth only (API keys belong to popnow-ai/popnow-api-mcp)
         run: |
-          if grep -rnE 'sk-popnow-|POPNOW_API_KEY|bearer_token_env_var' --include='*.json' --include='*.toml' examples server.json mcp.json .mcp.json gemini-extension.json; then
+          if grep -rnE 'sk-popnow-|POPNOW_API_KEY|bearer_token_env_var' --include='*.json' --include='*.toml' --include='*.md' examples server.json mcp.json .mcp.json gemini-extension.json .claude-plugin .cursor-plugin .codex-plugin skills commands; then
             echo "API key settings found in a consumer config"; exit 1
           fi
