@@ -178,12 +178,13 @@ Add `--scope user` to make PopNow available in every project, or `--scope projec
 
 ### ChatGPT
 
-Custom MCP servers depend on your ChatGPT plan and workspace settings, and menu names change as ChatGPT updates. The current path:
+PopNow is listed in the official ChatGPT app directory:
 
-1. Go to [chatgpt.com/plugins](https://chatgpt.com/plugins), press **+** and choose **Add custom MCP server**.
-2. Name it `PopNow`, paste `https://api.popnow.ai/mcp` under **Connection** and pick **OAuth** as the sign-in method. Accept the warning, then choose **Create as a plugin**.
-3. Sign in to PopNow and press **Allow**.
-4. In a new chat, type `@`, pick **PopNow** and ask. Photos you attach are passed to PopNow directly.
+1. Open [PopNow in ChatGPT](https://chatgpt.com/plugins/plugin_asdk_app_6adb0b143f44819189dde456f527563e) (or find PopNow in ChatGPT's app directory) and click **Connect**.
+2. Sign in to PopNow and press **Allow**.
+3. In a new chat, type `@`, pick **PopNow** and ask. Photos you attach are passed to PopNow directly.
+
+If you prefer adding a custom MCP server manually, `https://api.popnow.ai/mcp` remains available over Streamable HTTP with OAuth sign-in.
 
 ### Cursor
 
@@ -414,7 +415,7 @@ The Claude Code, Cursor and Codex plugins in this repository add five skills and
 ## FAQ
 
 ### How do I generate AI images and videos from Claude or ChatGPT?
-Add `https://api.popnow.ai/mcp` as a custom connector (Claude) or custom MCP server (ChatGPT), sign in to PopNow, and ask in plain words. The assistant calls `create_image`, `create_video` or another PopNow tool and returns the result in the chat.
+In ChatGPT, install PopNow directly from the [official ChatGPT app directory](https://chatgpt.com/plugins/plugin_asdk_app_6adb0b143f44819189dde456f527563e); in Claude, add `https://api.popnow.ai/mcp` as a custom connector. Sign in to PopNow, then ask in plain words. The assistant calls `create_image`, `create_video` or another PopNow tool and returns the result in the chat.
 
 ### How do I generate a video from an image with an MCP server?
 Give the assistant a photo (attach it in ChatGPT, or paste a public `https` link elsewhere) and describe the motion. It calls `create_video` with `image_url`, which switches to image-to-video. About 185 credits for 5 seconds on the default model.
